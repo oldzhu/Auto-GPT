@@ -164,17 +164,6 @@ def main(
             "Determine which next command to use, and respond using the"
             " format specified above:"
         )
-        # Initialize memory and make sure it is empty.
-        # this is particularly important for indexing and referencing pinecone memory
-        memory = get_memory(cfg, init=True)
-        logger.typewriter_log(
-            "Using memory of type:", Fore.GREEN, f"{memory.__class__.__name__}"
-        )
-        logger.typewriter_log("Using Browser:", Fore.GREEN, cfg.selenium_web_browser)
-        system_prompt = ai_config.construct_full_prompt()
-        if cfg.debug_mode:
-            logger.typewriter_log("Prompt:", Fore.GREEN, system_prompt)
-
         # TODO: have this directory live outside the repository (e.g. in a user's
         #   home directory) and have it come in as a command line argument or part of
         #   the env file.
@@ -186,6 +175,18 @@ def main(
         #   the workspace directory so we can bind them to the agent.
         workspace_directory = Workspace.make_workspace(workspace_directory)
         cfg.workspace_path = str(workspace_directory)
+                
+        # Initialize memory and make sure it is empty.
+        # this is particularly important for indexing and referencing pinecone memory
+        memory = get_memory(cfg, init=True)
+        logger.typewriter_log(
+            "Using memory of type:", Fore.GREEN, f"{memory.__class__.__name__}"
+        )
+        logger.typewriter_log("Using Browser:", Fore.GREEN, cfg.selenium_web_browser)
+        system_prompt = ai_config.construct_full_prompt()
+        if cfg.debug_mode:
+            logger.typewriter_log("Prompt:", Fore.GREEN, system_prompt)
+
 
         # HACK: doing this here to collect some globals that depend on the workspace.
         file_logger_path = workspace_directory / "file_logger.txt"
